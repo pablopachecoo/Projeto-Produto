@@ -9,7 +9,7 @@ import com.b3.produto.Repository.ProdutoRepository;
 import com.b3.produto.model.Categoria;
 import com.b3.produto.model.Produto;
 
-public class EditarProdutos {
+public class ProdutosServices {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,17 +21,17 @@ public class EditarProdutos {
 	@ManyToOne
 	public Categoria categoria;
 
-	public EditarProdutos() {
+	public ProdutosServices() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public EditarProdutos(Long id, String nome, Integer quantidade, Boolean usado, String descricao, Categoria categoria) {
-		Id = id;
-		Nome = nome;
-		Quantidade = quantidade;
-		Usado = usado;
-		Descricao = descricao;
-		this.categoria = categoria;
+	public ProdutosServices(Produto produto) {
+		this.Id = produto.getId();
+		this.Nome = produto.getNome();
+		this.Quantidade = produto.getQuantidade();
+		this.Usado = produto.getUsado();
+		this.Descricao = produto.getDescricao();
+		this.categoria = produto.getCategoria();
 	}
 
 	public Categoria getCategoria() {

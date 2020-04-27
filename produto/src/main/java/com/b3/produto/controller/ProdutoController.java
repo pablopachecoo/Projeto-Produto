@@ -1,7 +1,8 @@
 package com.b3.produto.controller;
 
+import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.b3.produto.Repository.ProdutoRepository;
 import com.b3.produto.model.Produto;
-import com.b3.produto.servicos.EditarProdutos;
+import com.b3.produto.servicos.ProdutosServices;
 
 
 @RestController
@@ -28,21 +29,28 @@ public class ProdutoController {
 	@Autowired
 	private ProdutoRepository produtoRepository;
 	
-	@GetMapping // Ver lista de Produtos
-	public List<Produto> lista(){
+	
+	@GetMapping // ----Ver lista de Produtos
+	public List<Produto> listar(){
 		List<Produto> produto = produtoRepository.findAll();
 		return produto;
 	}
-		
-	@PostMapping // Criar um Produto
+	
+	@GetMapping("/{id}") // ----Ver Produto por ID
+	@Transactional
+	public Optional<Produto> listarPorId(@PathVariable Long id){
+		return produtoRepository.findById(id);
+	}
+	
+	@PostMapping // ----Criar um Produto
 	public void Cadastrar(@RequestBody Produto produto){
 		produtoRepository.save(produto);
 	}
 	
+	
 	@PatchMapping("/{id}")
-	@PostMapping // Criar um Produto
 	@Transactional
-	public void Alterar(@PathVariable Long id, @RequestBody EditarProdutos produto){
+	public void Alterar(@PathVariable Long id, @RequestBody ProdutosServices produto){
 		Produto novo = produto.Atualizar(id, produtoRepository);
 		produtoRepository.save(novo);
 		
