@@ -1,19 +1,26 @@
 package com.b3.produto.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
-import com.b3.produto.Repository.ProdutoRepository;
 
 @Entity
 public class Produto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
+	@NotNull 
 	private String Nome;
+	@NotNull 
 	private Integer Quantidade;
+	@NotNull 
 	private Boolean Usado;
+	@NotNull 
 	private String Descricao;
+	
 	@ManyToOne
+	@NotNull
 	public Categoria categoria;
 
 	public Produto() {

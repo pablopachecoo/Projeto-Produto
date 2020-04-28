@@ -4,6 +4,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.b3.produto.Repository.ProdutoRepository;
 import com.b3.produto.model.Categoria;
@@ -14,15 +18,20 @@ public class ProdutosServices {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
+	@NotNull
 	private String Nome;
+	@NotNull
 	private Integer Quantidade;
+	@NotNull
 	private Boolean Usado;
+	@NotNull
 	private String Descricao;
 	@ManyToOne
+	@NotNull
 	public Categoria categoria;
 
 	public ProdutosServices() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public ProdutosServices(Produto produto) {
@@ -83,6 +92,7 @@ public class ProdutosServices {
 	}
 
 	public Produto Atualizar(Long id, ProdutoRepository produtoRepository) {
+		
 		Produto produto = produtoRepository.getOne(id);
 		produto.setNome(this.getNome());
 		produto.setQuantidade(this.getQuantidade());
@@ -90,6 +100,7 @@ public class ProdutosServices {
 		produto.setDescricao(this.getDescricao());
 		produto.setCategoria(this.getCategoria());
 		return produto;
+		
 	}
 
 }
