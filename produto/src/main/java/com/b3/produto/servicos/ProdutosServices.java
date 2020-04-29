@@ -1,5 +1,6 @@
 package com.b3.produto.servicos;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.GeneratedValue;
@@ -10,6 +11,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import org.hibernate.TransientPropertyValueException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.b3.produto.Repository.ProdutoRepository;
@@ -32,7 +35,7 @@ public class ProdutosServices {
 	@ManyToOne
 	@NotNull
 	public Categoria categoria;
-
+		
 	public ProdutosServices() {
 
 	}
@@ -116,9 +119,9 @@ public class ProdutosServices {
 	}
 	
 	//Retorna todos os Produtos |GET
-	public ResponseEntity<List<Produto>> Get(ProdutoRepository produtoRepository) {
-
-		return ResponseEntity.ok(produtoRepository.findAll());
+	public ResponseEntity<Page<Produto>> Get(ProdutoRepository produtoRepository, int paginas, int itens) {
+		PageRequest paginacao = PageRequest.of(paginas, itens);
+		return ResponseEntity.ok(produtoRepository.findAll(paginacao));
 	}
 	
 	// Criar um Produto |POST

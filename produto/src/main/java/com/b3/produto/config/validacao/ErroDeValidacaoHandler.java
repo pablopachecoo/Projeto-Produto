@@ -55,7 +55,7 @@ public class ErroDeValidacaoHandler {
 		return dto;
 	}
 	
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)//
 	@ExceptionHandler(EmptyResultDataAccessException.class)
 	public List<ErroDeCampo> handle(EmptyResultDataAccessException e) {
 		List<ErroDeCampo> dto = new ArrayList<>();

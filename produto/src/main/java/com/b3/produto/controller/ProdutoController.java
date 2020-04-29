@@ -6,9 +6,9 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import org.hibernate.TransientPropertyValueException;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.b3.produto.Repository.ProdutoRepository;
 import com.b3.produto.model.Produto;
@@ -33,9 +34,12 @@ public class ProdutoController {
 	
 	
 	@GetMapping // ----Ver Lista de Produtos, se não existe nenhum produto, é retornado um NOT_FOUND
-	public ResponseEntity<List<Produto>> listar(ProdutosServices produto){
+	public ResponseEntity<Page<Produto>> listar(ProdutosServices produto,
+			@RequestParam (required = true) int pagina, 
+			@RequestParam (required = true) int itens)
+	{
 		
-		ResponseEntity<List<Produto>> get = produto.Get(produtoRepository);
+		ResponseEntity<Page<Produto>> get = produto.Get(produtoRepository, pagina, itens);
 		return get;
 	}
 	
