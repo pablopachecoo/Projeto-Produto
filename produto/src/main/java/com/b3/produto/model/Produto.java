@@ -10,13 +10,13 @@ public class Produto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
-	@NotNull 
+	@NotNull @NotEmpty
 	private String Nome;
-	@NotNull 
+	@NotNull
 	private Integer Quantidade;
-	@NotNull 
+	@NotNull
 	private Boolean Usado;
-	@NotNull 
+	@NotNull @NotEmpty
 	private String Descricao;
 	
 	@ManyToOne

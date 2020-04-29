@@ -1,14 +1,17 @@
 package com.b3.produto.servicos;
 
+import java.util.List;
+import java.util.Optional;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
+import org.hibernate.TransientPropertyValueException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import com.b3.produto.Repository.ProdutoRepository;
 import com.b3.produto.model.Categoria;
 import com.b3.produto.model.Produto;
@@ -18,13 +21,13 @@ public class ProdutosServices {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
-	@NotNull
+	@NotNull @NotEmpty
 	private String Nome;
 	@NotNull
 	private Integer Quantidade;
 	@NotNull
 	private Boolean Usado;
-	@NotNull
+	@NotNull @NotEmpty
 	private String Descricao;
 	@ManyToOne
 	@NotNull
@@ -92,7 +95,7 @@ public class ProdutosServices {
 	}
 
 	public Produto Atualizar(Long id, ProdutoRepository produtoRepository) {
-		
+
 		Produto produto = produtoRepository.getOne(id);
 		produto.setNome(this.getNome());
 		produto.setQuantidade(this.getQuantidade());
@@ -100,7 +103,32 @@ public class ProdutosServices {
 		produto.setDescricao(this.getDescricao());
 		produto.setCategoria(this.getCategoria());
 		return produto;
-		
 	}
 
+	//Retorna o Produto pelo ID |GET_ID
+	public ResponseEntity<Optional<Produto>> GetById(Long id, ProdutoRepository produtoRepository) {   
+
+		if (produtoRepository.existsById(id) != true) {
+			System.out.println("o id não existe");
+			return new ResponseEntity<Optional<Produto>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<Optional<Produto>>(produtoRepository.findById(id), HttpStatus.OK);
+	}
+	
+	//Retorna todos os Produtos |GET
+	public ResponseEntity<List<Produto>> Get(ProdutoRepository produtoRepository) {
+
+		return ResponseEntity.ok(produtoRepository.findAll());
+	}
+	
+	// Criar um Produto |POST
+	public ResponseEntity<Produto> Post(ProdutoRepository produtoRepository, Produto p) {
+			produtoRepository.save(p);
+			return ResponseEntity.ok(p);
+	}
+
+	public ResponseEntity<Produto> deletar(Long id, ProdutoRepository produtoRepository) {
+		produtoRepository.deleteById(id);
+		return new ResponseEntity<Produto>(HttpStatus.OK);
+	}
 }

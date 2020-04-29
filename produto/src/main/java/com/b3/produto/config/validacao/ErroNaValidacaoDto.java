@@ -9,6 +9,7 @@ public class ErroNaValidacaoDto {
 		this.campo= campo;
 		this.erro = erro;
 	}
+	
 
 	public String getCampo() {
 		return campo;

@@ -3,8 +3,6 @@ package com.b3.produto.controller;
 
 import java.util.List;
 import java.util.Optional;
-
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -35,37 +33,26 @@ public class ProdutoController {
 	
 	
 	@GetMapping // ----Ver Lista de Produtos, se não existe nenhum produto, é retornado um NOT_FOUND
-	public ResponseEntity<List<Produto>> listar(){
-		if (produtoRepository.count() != 0) {
-			return ResponseEntity.ok(produtoRepository.findAll());
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	public ResponseEntity<List<Produto>> listar(ProdutosServices produto){
+		
+		ResponseEntity<List<Produto>> get = produto.Get(produtoRepository);
+		return get;
 	}
 	
 	@GetMapping("/{id}") // ----Checa se o Produto com o Respectivo id Existe no Banco de Dados, caso não exista, retorna um NOT_FOUND
-	public ResponseEntity<Optional<Produto>> listarPorId(@PathVariable Long id){
-		
-		if (produtoRepository.existsById(id) != true) {
-			System.out.println("o id não existe");
-			return new ResponseEntity<Optional<Produto>>(HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<Optional<Produto>>(produtoRepository.findById(id),HttpStatus.OK);
-		
+	public ResponseEntity<Optional<Produto>> listarPorId(@PathVariable Long id, ProdutosServices produto){
+		ResponseEntity<Optional<Produto>> pesquisa = produto.GetById(id, produtoRepository);
+		return pesquisa;
 	}
-	
+
+
 	@PostMapping // ----Criar um Produto
-	public ResponseEntity<Produto> Cadastrar(@RequestBody @Valid Produto produto){
-		try {
-			produtoRepository.save(produto);
-		} catch (TransientPropertyValueException | InvalidDataAccessApiUsageException e) {
-			return new ResponseEntity<Produto>(HttpStatus.BAD_REQUEST);
-		}
-		System.out.println("CHEGOU NO FINAL");
-		return null;
-		
+	public ResponseEntity<Produto> Cadastrar(@RequestBody @Valid Produto produto, ProdutosServices prod){
+		ResponseEntity<Produto> p = prod.Post(produtoRepository, produto);
+		return p;
 	}
-		
-	
+
+
 	@PatchMapping("/{id}") //----Editar um Produto por ID
 	@Transactional
 	public ResponseEntity<Produto> Alterar(@PathVariable Long id, @RequestBody @Valid ProdutosServices produto){
@@ -74,14 +61,14 @@ public class ProdutoController {
 			produtoRepository.save(novo);
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (Exception e) {
-			System.out.println(e.getMessage() + "entrou no catch");
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
+	
 	@DeleteMapping("/{id}") //----Deletar um produto por ID
-	public void deletar(@PathVariable Long id) {
-		Produto deletado = produtoRepository.getOne(id);
-		produtoRepository.delete(deletado);
+	public ResponseEntity<Produto> deletar(@PathVariable Long id, ProdutosServices produto) {
+		ResponseEntity<Produto> deletado = produto.deletar(id,produtoRepository);
+		return deletado;
 	}
 }
