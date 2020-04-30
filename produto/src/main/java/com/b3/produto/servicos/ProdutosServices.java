@@ -1,7 +1,9 @@
 package com.b3.produto.servicos;
 
-import java.awt.print.Pageable;
-import java.util.List;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Optional;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import org.hibernate.TransientPropertyValueException;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -96,7 +96,7 @@ public class ProdutosServices {
 	public void setDescricao(String descricao) {
 		Descricao = descricao;
 	}
-
+	
 	public Produto Atualizar(Long id, ProdutoRepository produtoRepository) {
 
 		Produto produto = produtoRepository.getOne(id);
@@ -119,9 +119,24 @@ public class ProdutosServices {
 	}
 	
 	//Retorna todos os Produtos |GET
-	public ResponseEntity<Page<Produto>> Get(ProdutoRepository produtoRepository, int paginas, int itens) {
-		PageRequest paginacao = PageRequest.of(paginas, itens);
-		return ResponseEntity.ok(produtoRepository.findAll(paginacao));
+	public ResponseEntity<Page<Produto>> Get(ProdutoRepository produtoRepository, int paginas, int itens) throws IOException{
+		
+	
+			URL url = new URL("http://localhost:8080/produtos?pagina=1&itens=1");
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+			connection.setRequestMethod("GET");
+			connection.connect();
+			int http = connection.getResponseCode();
+			PageRequest paginacao = PageRequest.of(paginas, itens);
+			System.out.println(http);
+			return ResponseEntity.ok(produtoRepository.findAll(paginacao));
+			// loop
+			// resolver o loop, tem duas requests, deixar uma só
+		
+	
+		//PageRequest paginacao = PageRequest.of(paginas, itens);
+		
+		//return ResponseEntity.ok(produtoRepository.findAll(paginacao));
 	}
 	
 	// Criar um Produto |POST

@@ -1,12 +1,12 @@
 package com.b3.produto.controller;
 
 
-import java.util.List;
+
+
+import java.io.IOException;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,6 +25,7 @@ import com.b3.produto.model.Produto;
 import com.b3.produto.servicos.ProdutosServices;
 
 
+
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
@@ -32,13 +33,12 @@ public class ProdutoController {
 	@Autowired
 	private ProdutoRepository produtoRepository;
 	
-	
+
 	@GetMapping // ----Ver Lista de Produtos, se não existe nenhum produto, é retornado um NOT_FOUND
 	public ResponseEntity<Page<Produto>> listar(ProdutosServices produto,
 			@RequestParam (required = true) int pagina, 
-			@RequestParam (required = true) int itens)
+			@RequestParam (required = true) int itens) throws IOException
 	{
-		
 		ResponseEntity<Page<Produto>> get = produto.Get(produtoRepository, pagina, itens);
 		return get;
 	}
