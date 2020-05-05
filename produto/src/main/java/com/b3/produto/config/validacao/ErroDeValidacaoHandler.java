@@ -1,5 +1,6 @@
 package com.b3.produto.config.validacao;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.TransientPropertyValueException;
@@ -16,7 +17,7 @@ public class ErroDeValidacaoHandler {
 
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ MethodArgumentNotValidException.class, InvalidDataAccessApiUsageException.class,
-			TransientPropertyValueException.class, EmptyResultDataAccessException.class }) // Pega Campos Nulos e Vazios
+			TransientPropertyValueException.class, EmptyResultDataAccessException.class}) // Pega Campos Nulos e Vazios
 	public List<ErroDeCampo> handle(MethodArgumentNotValidException e) {
 		
 		List<ErroDeCampo> dto = new ArrayList<>();
@@ -25,6 +26,11 @@ public class ErroDeValidacaoHandler {
 		dto.add(erro);
 
 		return dto;
+	}
+	
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	public void tratar() {
+		
 	}
 	
 }
